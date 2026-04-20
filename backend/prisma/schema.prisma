@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextIndex"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  name      String
+  phone     String?
+  avatar    String?
+  role      String     @default("user") // user, agent, admin
+  verified  Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  properties Property[]
+  inquiries  Inquiry[]
+  favorites  Favorite[]
+  reviews    Review[]
+  
+  @@index([email])
+}
+
+model Property {
+  id            String   @id @default(uuid())
+  title         String
+  description   String   @db.LongText
+  category      String   // apartment, house, villa, land, townhouse, hostel
+  propertyType  String   // residential, commercial, industrial
+  price         BigInt
+  location      String
+  city          String
+  state         String
+  zipCode       String?
+  latitude      Float?
+  longitude     Float?
+  bedrooms      Int?
+  bathrooms     Int?
+  area          Int      // in sq ft
+  parking       Int?     @default(0)
+  amenities     String?  // JSON string of amenities
+  images        String?  // JSON string of image URLs
+  videoUrl      String?
+  
+  featured      Boolean  @default(false)
+  verified      Boolean  @default(false)
+  active        Boolean  @default(true)
+  
+  owner         User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId       String
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  inquiries     Inquiry[]
+  favorites     Favorite[]
+  reviews       Review[]
+  
+  @@index([ownerId])
+  @@index([city])
+  @@index([category])
+  @@index([featured])
+  @@fulltext([title, description, location])
+}
+
+model Inquiry {
+  id            String   @id @default(uuid())
+  name          String
+  email         String
+  phone         String
+  message       String   @db.LongText
+  status        String   @default("pending") // pending, contacted, converted, rejected
+  
+  property      Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId    String
+  
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId        String?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([propertyId])
+  @@index([userId])
+  @@index([status])
+}
+
+model Favorite {
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  
+  property      Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId    String
+  
+  createdAt     DateTime @default(now())
+  
+  @@unique([userId, propertyId])
+  @@index([userId])
+  @@index([propertyId])
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  rating        Int      // 1-5
+  comment       String   @db.LongText
+  
+  property      Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId    String
+  
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([propertyId])
+  @@index([userId])
+}
+
+model Category {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  slug          String   @unique
+  description   String?
+  icon          String?
+  image         String?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
