@@ -4,6 +4,7 @@ import {
   createReviewSchema,
   updateReviewSchema,
 } from "../schemas/review.schema";
+import { serializeBigInt } from "../utils/helpers";
 import prisma from "../lib/prisma";
 
 const router = Router();
@@ -37,7 +38,7 @@ router.get(
 
     res.json({
       success: true,
-      data: reviews,
+      data: serializeBigInt(reviews),
       stats: {
         totalReviews: reviews.length,
         averageRating: parseFloat(avgRating.toFixed(1)),
@@ -80,7 +81,7 @@ router.get(
 
     res.json({
       success: true,
-      data: reviews,
+      data: serializeBigInt(reviews),
     });
   })
 );
@@ -107,7 +108,7 @@ router.post(
     res.status(201).json({
       success: true,
       message: "Review created successfully",
-      data: review,
+      data: serializeBigInt(review),
     });
   })
 );
@@ -136,7 +137,7 @@ router.put(
     res.json({
       success: true,
       message: "Review updated successfully",
-      data: review,
+      data: serializeBigInt(review),
     });
   })
 );

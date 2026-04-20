@@ -5,6 +5,7 @@ import {
   updatePropertySchema,
   queryPropertySchema,
 } from "../schemas/property.schema";
+import { serializeBigInt } from "../utils/helpers";
 import prisma from "../lib/prisma";
 
 const router = Router();
@@ -61,7 +62,7 @@ router.get(
 
     res.json({
       success: true,
-      data: properties,
+      data: serializeBigInt(properties),
       pagination: {
         total,
         page,
@@ -100,7 +101,7 @@ router.get(
 
     res.json({
       success: true,
-      data: property,
+      data: serializeBigInt(property),
     });
   })
 );
@@ -136,7 +137,7 @@ router.post(
     res.status(201).json({
       success: true,
       message: "Property created successfully",
-      data: property,
+      data: serializeBigInt(property),
     });
   })
 );
@@ -168,7 +169,7 @@ router.put(
     res.json({
       success: true,
       message: "Property updated successfully",
-      data: property,
+      data: serializeBigInt(property),
     });
   })
 );

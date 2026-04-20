@@ -4,6 +4,7 @@ import {
   createInquirySchema,
   updateInquirySchema,
 } from "../schemas/inquiry.schema";
+import { serializeBigInt } from "../utils/helpers";
 import prisma from "../lib/prisma";
 
 const router = Router();
@@ -44,7 +45,7 @@ router.get(
 
     res.json({
       success: true,
-      data: inquiries,
+      data: serializeBigInt(inquiries),
     });
   })
 );
@@ -76,7 +77,7 @@ router.get(
 
     res.json({
       success: true,
-      data: inquiry,
+      data: serializeBigInt(inquiry),
     });
   })
 );
@@ -111,7 +112,7 @@ router.post(
     res.status(201).json({
       success: true,
       message: "Inquiry created successfully",
-      data: inquiry,
+      data: serializeBigInt(inquiry),
     });
   })
 );
@@ -131,7 +132,7 @@ router.put(
     res.json({
       success: true,
       message: "Inquiry updated successfully",
-      data: inquiry,
+      data: serializeBigInt(inquiry),
     });
   })
 );

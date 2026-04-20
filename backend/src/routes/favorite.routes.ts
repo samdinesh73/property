@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { asyncHandler, ApiError } from "../middleware/errorHandler";
+import { serializeBigInt } from "../utils/helpers";
 import prisma from "../lib/prisma";
 
 const router = Router();
@@ -22,7 +23,7 @@ router.get(
 
     res.json({
       success: true,
-      data: favorites,
+      data: serializeBigInt(favorites),
     });
   })
 );
@@ -86,7 +87,7 @@ router.post(
     res.status(201).json({
       success: true,
       message: "Added to favorites",
-      data: favorite,
+      data: serializeBigInt(favorite),
     });
   })
 );

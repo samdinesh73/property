@@ -5,6 +5,7 @@ import {
   loginUserSchema,
   updateUserSchema,
 } from "../schemas/user.schema";
+import { serializeBigInt } from "../utils/helpers";
 import prisma from "../lib/prisma";
 
 const router = Router();
@@ -28,7 +29,7 @@ router.get(
 
     res.json({
       success: true,
-      data: users,
+      data: serializeBigInt(users),
     });
   })
 );
@@ -59,7 +60,7 @@ router.get(
 
     res.json({
       success: true,
-      data: user,
+      data: serializeBigInt(user),
     });
   })
 );
@@ -94,7 +95,7 @@ router.post(
     res.status(201).json({
       success: true,
       message: "User created successfully",
-      data: user,
+      data: serializeBigInt(user),
     });
   })
 );

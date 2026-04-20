@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { asyncHandler, ApiError } from "../middleware/errorHandler";
+import { serializeBigInt } from "../utils/helpers";
 import prisma from "../lib/prisma";
 
 const router = Router();
@@ -16,7 +17,7 @@ router.get(
 
     res.json({
       success: true,
-      data: categories,
+      data: serializeBigInt(categories),
     });
   })
 );
@@ -37,7 +38,7 @@ router.get(
 
     res.json({
       success: true,
-      data: category,
+      data: serializeBigInt(category),
     });
   })
 );
@@ -58,7 +59,7 @@ router.get(
 
     res.json({
       success: true,
-      data: category,
+      data: serializeBigInt(category),
     });
   })
 );
@@ -94,7 +95,7 @@ router.post(
     res.status(201).json({
       success: true,
       message: "Category created successfully",
-      data: category,
+      data: serializeBigInt(category),
     });
   })
 );
@@ -120,7 +121,7 @@ router.put(
     res.json({
       success: true,
       message: "Category updated successfully",
-      data: category,
+      data: serializeBigInt(category),
     });
   })
 );
