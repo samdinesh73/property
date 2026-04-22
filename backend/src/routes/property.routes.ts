@@ -19,7 +19,6 @@ router.get(
 
     const where: any = {
       active: true,
-      verified: true,
     };
 
     if (city) where.city = city;
